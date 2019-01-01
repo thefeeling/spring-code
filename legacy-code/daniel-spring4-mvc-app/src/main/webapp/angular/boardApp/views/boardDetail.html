@@ -1,0 +1,20 @@
+<div ng-controller="detailCtrl" class="container">
+	<h1>boardDetail</h1>
+	<hr>
+	<br>
+	<span>게시물번호 : {{ boardDt.boardNo }}</span>
+	<br>
+	<span>제목 : {{ boardDt.boardTitle }}</span>
+	<br>
+	<span>내용 : {{ boardDt.boardContent }}</span>
+	<br>
+	<span>작성일자 : {{ boardDt.boardInsertDate }}</span>
+	<br>
+	<span>수정일자 : {{ boardDt.boardModifyDate }}</span>
+	<br>
+	<hr>
+	<span>
+		<button ng-click="boardUpdate(boardDt.boardNo)">수정</button>
+		<button ng-click="boardDelete(boardDt.boardNo)">삭제</button>
+	</span>
+</div>

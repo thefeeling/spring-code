@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<toolbox>
+	<tool>
+		<key>vcMath</key>
+		<scope>application</scope>
+		<class>org.apache.velocity.tools.generic.MathTool</class>
+	</tool>
+	<tool>
+		<key>link</key>
+		<scope>request</scope>
+		<class>org.apache.velocity.tools.struts.StrutsLinkTool</class>
+	</tool>
+	<!-- ordinarily the SecureLinkTool would simply replace the StrutsLinkTool 
+		if SSL Ext. is in use - in that case the key would be 'link' but it's 'slink' 
+		here to distinguish between the two. -->
+	<tool>
+		<key>number</key>
+		<scope>application</scope>
+		<class>org.apache.velocity.tools.generic.NumberTool</class>
+		<parameter name="format" value="#0.0" />
+	</tool>
+	<tool>
+		<key>date</key>
+		<scope>application</scope>
+		<class>org.apache.velocity.tools.generic.DateTool</class>
+		<parameter name="format" value="yyyy-MM-dd" />
+	</tool>
+	<tool>
+		<key>listTool</key>
+		<scope>application</scope>
+		<class>org.apache.velocity.tools.generic.ListTool</class>
+	</tool>
+	<tool>
+		<key>cookie</key>
+		<scope>request</scope>
+		<class>org.apache.velocity.tools.view.tools.CookieTool</class>
+	</tool>
+	<tool>
+		<key>import</key>
+		<scope>request</scope>
+		<class>org.apache.velocity.tools.view.tools.ImportTool</class>
+	</tool>
+	<tool>
+		<key>params</key>
+		<scope>request</scope>
+		<class>org.apache.velocity.tools.view.tools.ParameterParser</class>
+	</tool>
+
+</toolbox>

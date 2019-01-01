@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <beans:bean id="loggerInterceptor" class="org.springframework.common.LoggerInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+	<!-- DispatcherServlet Context : 서블릿의 요청 처리에 대한 구조를 정의 -->
+	<!-- 원문 : DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- Spring MVC @Controller 어노테이션 프로그래밍 모델을 가능하게 함? -->
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven conversion-service="conversionService" enable-matrix-variables="true">
+		<argument-resolvers>
+			<!-- CustomArgumentResolver :  컨트롤러(Controller)에 들어오는 파라미터(Parameter)를 수정하거나 공통적으로 추가를 해주어야 하는 경우 사용 -->
+			<!-- <beans:bean class="org.springframework.samples.mvc.data.custom.CustomArgumentResolver"/> -->
+			<beans:bean class="org.springframework.config.CustomMapArgumentResolver"/>
+		</argument-resolvers>
+	</annotation-driven>
+
+	<!-- Http Get 요청에 대하여 /resources/**로 맵핑 처리 => ${webappRoot}/resources/ 디렉토리-->
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources/ directory -->
+	<resources mapping="/resources/**" location="/resources/" />
+
+
+	<!-- Board Angular -->
+	<resources mapping="/boardApp/"   location="/angular/boardApp/index.html" />
+	<resources mapping="/boardApp/**" location="/angular/boardApp/" />
+	
+	<!-- Webjar Resource 기본 설정 -->	
+	<mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
+
+	<!--
+		ContentNegotiatingViewResolver 설정
+		* Spring 3.2부터 MediaType Depricated
+		
+		ref) http://redtrain.tistory.com/821
+			 http://egloos.zum.com/cj848/v/372874
+			 http://118k.tistory.com/36	
+			 https://blogs.oracle.com/alexismp/entry/web_inf_lib_jar_meta
+			http://lng1982.tistory.com/212	
+	 -->
+	<beans:bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<beans:property name="contentNegotiationManager">
+			<beans:bean class="org.springframework.web.accept.ContentNegotiationManager">
+				<beans:constructor-arg>
+					<beans:bean class="org.springframework.web.accept.PathExtensionContentNegotiationStrategy">
+						<beans:constructor-arg>
+							<beans:map>
+<!-- 								<beans:entry key="css"   value="text/css" /> -->
+								<beans:entry key="json"  value="application/json" />
+								<beans:entry key="jsonp" value="javascript/jsonp" />
+								<beans:entry key="xml"   value="application/xml" />
+								<beans:entry key="js"    value="application/javascript" />
+							</beans:map>
+						</beans:constructor-arg>
+					</beans:bean>				
+				</beans:constructor-arg>
+			</beans:bean>		
+		</beans:property>
+	</beans:bean>
+
+	<!-- viewResolver 처리 -->
+	<!-- 맵핑되는 확장자가 없을때 JSP 로 뷰 처리 -->
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+	
+	
+	<!-- 이거는 쫌 분석해봐야 할 듯 -->
+	<!-- Only needed because we install custom converters to support the examples in the org.springframewok.samples.mvc.convert package -->
+	<beans:bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<!-- 		
+			<beans:property name="formatters">
+	            <beans:bean class="org.springframework.samples.mvc.convert.MaskFormatAnnotationFormatterFactory" />
+			</beans:property>
+		-->
+	</beans:bean>
+
+	<!-- multipartResolver 처리 -->
+	<!-- Only needed because we require fileupload in the org.springframework.samples.mvc.fileupload package -->
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+
+	<!-- 유저 정의 @Controller 빈(클라이언트 요청을 처리하는) 불러옴 -->
+	<!-- Imports user-defined @Controller beans that process client requests -->
+	<beans:import resource="controllers.xml" />
+
+	<task:annotation-driven />
+	
+</beans:beans>

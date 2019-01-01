@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<form id="boardFrm" method="POST" action="/boardInsert/board">
+		<input type="text" name="boardTitle"      value="타이틀입니다."/>
+		<input type="text" name="boardContent"    value="컨텐츠입니다."/>
+		<input type="button" id="submit" value="Submit">
+	</form>
+
+	
+	<script src="jquery.js"></script>
+	<script type="text/javascript">
+	/*
+		2015-11-16
+		jQuery Ajax Test => Success
+	*/
+    $(function(){
+		$("#submit").click(function(){
+			$("#boardFrm").submit();    			
+			//$.ajax({
+			//	//테스트 URL
+			//    //url : "http://localhost:8080/listTest/Friends",
+			//    url : "/boardInsert/board",
+			//    type: "POST",
+			//    data : $("#boardFrm").serialize(),
+			//    dataType : "json",
+			//    success : function(data){
+			//    	console.log('성공 - ' + data);
+			//    	console.log(data.toString());
+			//    },
+			//    error: function(xhr) {
+			//		console.log('실패 - ', xhr);
+			//    }			    
+			//});
+		});    	
+    })
+    </script>
+</body>
+</html>

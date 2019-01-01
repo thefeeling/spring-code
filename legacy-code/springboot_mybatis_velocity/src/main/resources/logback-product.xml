@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- jdbc.sqlonly : Logs only SQL jdbc.sqltiming : Logs the SQL, post-execution, 
+	including timing execution statistics jdbc.audit : Logs ALL JDBC calls except 
+	for ResultSets jdbc.resultset : all calls to ResultSet objects are logged 
+	jdbc.connection : Logs connection open and close events -->
+
+<!-- Product Profile logback - 파일 log 유지기간 : 60일 - application.yyyymmdd.log -->
+<configuration>
+	<appender name="dailyRollingFileAppender"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<prudent>true</prudent>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>d:/logs/application.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>60</maxHistory>
+			<cleanHistoryOnStart>false</cleanHistoryOnStart>
+		</rollingPolicy>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>
+		<encoder>
+			<pattern>%d{yyyy:MM:dd HH:mm:ss.SSS} %-5level --- [%thread]
+				%logger{35} : %msg %n</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="jdbc" level="OFF" />
+	<logger name="jdbc.sqltiming" level="DEBUG" additivity="false">
+		<appender-ref ref="dailyRollingFileAppender" />
+	</logger>
+
+	<logger name="jdbc.resultsettable" level="DEBUG" additivity="false">
+		<appender-ref ref="dailyRollingFileAppender" />
+	</logger>
+
+	<root level="INFO">
+		<appender-ref ref="dailyRollingFileAppender" />
+	</root>
+
+</configuration>

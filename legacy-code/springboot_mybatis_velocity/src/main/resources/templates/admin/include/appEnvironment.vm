@@ -1,0 +1,9 @@
+## appEnvironment - common properties
+##보안프로토콜 적용 여부
+#if (${request.isSecure()})
+	#set($protocol = 'https://')
+#else
+	#set($protocol = 'http://')
+#end
+
+#set($context_path = '')

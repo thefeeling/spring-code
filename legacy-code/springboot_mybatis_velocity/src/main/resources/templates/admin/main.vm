@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	#parse("/templates/admin/include/header.vm")
+</head>
+
+<body>
+	<div id="wrapper">
+		{{> admin/include/navigation}}
+		<!-- Page Content -->
+		<div id="page-wrapper">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-lg-12">
+						<h1 class="page-header">Blank</h1>
+					</div>
+					<!-- /.col-lg-12 -->
+				</div>
+				<!-- /.row -->
+			</div>
+			<!-- /.container-fluid -->
+		</div>
+		<!-- /#page-wrapper -->
+	
+	</div>
+	<!-- /#wrapper -->
+
+	#parse("/templates/admin/include/footer.vm")
+	<!-- ####################################################################### -->
+	<!-- 
+		if you want to add sciprt files, its downarea is that place to add files
+	 -->
+	<!-- ####################################################################### -->
+</body>
+
+</html>	
+

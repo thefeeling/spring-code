@@ -1,0 +1,5 @@
+<html>
+<body>
+	<h1>Error Page</h1>
+</body>
+</html>

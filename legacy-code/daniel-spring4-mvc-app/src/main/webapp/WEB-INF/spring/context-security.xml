@@ -1,0 +1,74 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		
+		">
+
+	<!-- Root Context: defines shared resources visible to all other web components -->
+
+	<!-- CSRF protection. Here we only include the CsrfFilter instead of all 
+		of Spring Security. See http://docs.spring.io/spring-security/site/docs/3.2.x/reference/htmlsingle/#csrf 
+		for more information on Spring Security's CSRF protection -->
+
+	<!-- <bean id="csrfFilter" class="org.springframework.security.web.csrf.CsrfFilter"> 
+		<constructor-arg> <bean class="org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository"/> 
+		</constructor-arg> </bean> -->
+
+	<!-- [2015-11-16] 스프링 MVC가 Form Tag 혹은 Thymeleaf를 사용할 떄, 자동화 CSRF 토큰 inclusion을 
+		제공해준다. -->
+	<!-- Provides automatic CSRF token inclusion when using Spring MVC Form 
+		tags or Thymeleaf. See http://localhost:8080/#forms and form.jsp for examples -->
+	<!-- <bean id="requestDataValueProcessor" class="org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor"/> -->
+
+	<security:http auto-config='true' use-expressions="true">
+		<security:intercept-url pattern="/blog/auth/login" access="permitAll" />
+		<security:intercept-url pattern="/blog/main"       access="hasRole('ROLE_USER')" />
+		
+		<security:csrf disabled="true"/>
+		
+ 		<security:form-login 
+			login-page="/blog/auth/login"
+			username-parameter="blogId" 
+			password-parameter="blogPw"
+			login-processing-url="/blog/auth/loginProc"
+			authentication-failure-url="/blog/auth/login"
+			default-target-url="/blog/main"
+			always-use-default-target="false" />
+
+<!--  		<security:form-login 
+			login-page="/blog/auth/login"
+			username-parameter="blogid" 
+			password-parameter="blogpw"
+			login-processing-url="/blog/auth/loginProcess"
+			authentication-success-handler-ref="loginSuccessHandler"
+			authentication-failure-handler-ref="loginFailureHandler"
+			default-target-url="/admin" 
+			always-use-default-target="false" /> -->
+
+ 		<security:logout invalidate-session="true" logout-success-url="/blog/auth/login" logout-url="/blog/auth/logout" />
+
+        <security:session-management>
+            <security:concurrency-control max-sessions="1" expired-url="/blog/auth/login_duplicate"/>
+        </security:session-management>
+
+	</security:http>
+
+<!--     <bean id="loginSuccessHandler" class="org.springframework.app.blogApp.security.handler.LoginSuccessHandler" />
+    <bean id="loginFailureHandler" class="org.springframework.app.blogApp.security.handler.LoginFailtureHandler">
+        <property name="defaultFailureUrl" value="/signin?error=true" />
+    </bean> -->
+
+
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:user-service>
+				<security:user name="guest" password="guest" authorities="ROLE_USER" />
+				<security:user name="admin" password="admin" authorities="ROLE_ADMIN" />
+			</security:user-service>
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+
+</beans>

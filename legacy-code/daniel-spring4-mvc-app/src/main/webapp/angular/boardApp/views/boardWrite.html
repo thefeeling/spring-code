@@ -1,0 +1,30 @@
+<div ng-controller="writeCtrl" class="container">
+	<form name="updateFrm" ng-submit="saveBoard()">
+		<h1>boardWrite</h1>
+		<label>제목 : 
+		  <input type="text" name="boardTitle" 
+				  ng-model="boardDt.boardTitle" 
+				  ng-minlength="10" 
+				  ng-maxlength="50" 
+				  required 
+				  ng-trim="false" />
+		</label>
+		<br>
+		<hr>
+		<label>내용 : 
+		  <textarea name="boardContent" 
+				  ng-model="boardDt.boardContent" 
+				  ng-minlength="10" 
+				  ng-maxlength="100" 
+				  required 
+				  ng-trim="false"></textarea>
+		</label>
+		<br>
+		<br>
+		<span>
+	        <!-- SUBMIT BUTTON -->
+	        <button type="submit" class="btn btn-primary">글쓰기</button>	
+			<!-- <button ng-click="updateBoardDt(boardNo)">수정</button> -->
+		</span>
+	</form>
+</div>

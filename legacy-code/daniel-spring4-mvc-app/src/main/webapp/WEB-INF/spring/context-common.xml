@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+	<!--
+	※ classpath
+	  - eclipse 에서 package explorer 로 보게 되면 해당 project 의  src/main/resources에 해당한다.
+	  - build 를 하게 되면 webapp 하위에 /WEB-INF/classes에 해당한다.
+	  - 위에 src/main/resources 에 파일을 하나 생성해 놓고 빌드를 해보면 생성한 파일이 WEB-INF/classes 에 들어가 있는걸 볼 수 있다.  
+	  
+	*. import 시 "classpath:"와 "classpath*:" 의 차이점  
+	
+	1) classpath:conf/spring-context.xml
+		classes 폴더와 jar 폴더를 순환하면서 첫번째로 발견되는 파일을 가져옵니다.
+		즉, 단일 파일이 로딩되는 형태가 됩니다.
+	
+	
+	2) classpath*:conf/spring-context.xml
+	
+	classes 폴더와 jar 폴더를 순환하면서 conf 폴더의 spring-context.xml 파일을 모두 찾아냅니다.
+	즉, 복수개의 파일이 로딩되는 형태가 됩니다.	  
+	  
+	-->
+
+	<!-- messageSource 등록 -->
+	<!-- 
+		참고 : http://egloos.zum.com/ultteky/v/10520923
+		1. ReloadableResourceBundleMessageSource : org.springframework.context.MessageSource interface 구현 클래스
+		 - 메세지의 국제화 지원
+	
+	
+	 -->
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<!-- 
+			다국어 지원 및 다중으로 등록 시 하단과 같이 명시
+			다중 프로퍼티 사용의 경우 <list><value></value><list> 등을 사용하여 등록 처리함. 
+		<property name="basenames">
+			<list>
+				<value>classpath:/messages/message-common</value>
+				<value>classpath:/messages/msg</value>
+				<value>classpath:/messages/title</value>
+				<value>classpath:/messages/word</value>
+			</list>
+		</property>
+		-->
+		<property name="basename">
+			<value>classpath:/messages/message-common</value>
+		</property>		
+	</bean>
+
+	<!-- Properties 설정 -->
+	<!-- 
+		- 확장성있는 프로퍼티 값 설정하여 추후 기능 추가했을 경우 유연하게 대처?
+	
+	 -->
+	<!-- <context:property-placeholder location="/WEB-INF/*.properties" /> -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">    
+		<property name="locations" value="classpath:/config/config.properties"/>    
+		<property name="fileEncoding" value="UTF-8"/>
+	</bean> 
+</beans>

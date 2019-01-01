@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<title></title>
+</head>
+<body ng-app="boardApp">
+	<div ng-include="'views/boardMenu.html'"></div>	
+	<div ng-view></div>
+	
+	<!-- Libs -->
+	<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+	<script src="js/lib/angular.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+	<script src="js/lib/angular-cookies.min.js"></script>
+	<script src="js/lib/angular-resource.min.js"></script>
+	<script src="js/lib/angular-route.min.js"></script>
+	<script src="js/lib/angular-sanitize.min.js"></script>
+
+
+	<!-- Controller, Service, Factory ...ETC -->
+	<script src="js/app/config.js"></script>
+	<script src="js/app/routes.js"></script>
+	<script src="js/app/service.js"></script>
+	<script src="js/app/factory.js"></script>
+	<script src="js/app/controller.js"></script>
+</body>
+</html>
