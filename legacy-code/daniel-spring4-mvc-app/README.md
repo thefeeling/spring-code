@@ -1,4 +1,4 @@
-## Spring MVC App ##
+## Spring MVC App(Deprecated) ##
 Spring-MVC-Showcase 탬플릿을 기준으로 기능을 확장한 형태입니다..<br>
 **(Spring 4.0 기반으로 작성)**
 
