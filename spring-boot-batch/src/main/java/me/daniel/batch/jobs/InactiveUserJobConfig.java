@@ -144,16 +144,15 @@ public class InactiveUserJobConfig {
             .build();
     }
 
-
     public ItemProcessor<User, User> itemProcessor() {
         return User::setInactive;
     }
 
-//    public ItemWriter<User> itemWriter() {
-//        return ((List<? extends User> user) -> {
-//            user.forEach(o -> log.info(">>>> user = {}", o));
-//            userRepository.saveAll(user);
-//        });
-//    }
+    public ItemWriter<User> itemWriter() {
+        return ((List<? extends User> user) -> {
+            user.forEach(o -> log.info(">>>> user = {}", o));
+            userRepository.saveAll(user);
+        });
+    }
 
 }
