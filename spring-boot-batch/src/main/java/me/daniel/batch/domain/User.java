@@ -12,10 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import me.daniel.batch.domain.enums.Grade;
 import me.daniel.batch.domain.enums.SocialType;
 import me.daniel.batch.domain.enums.UserStatus;
@@ -26,6 +23,7 @@ import me.daniel.batch.domain.enums.UserStatus;
 @Getter
 @EqualsAndHashCode(of = {"idx", "email"})
 @NoArgsConstructor
+@ToString
 @Entity
 @Table
 public class User implements Serializable {
