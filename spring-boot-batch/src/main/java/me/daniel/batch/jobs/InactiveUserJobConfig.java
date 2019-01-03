@@ -13,30 +13,18 @@ import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.data.RepositoryItemReader;
-import org.springframework.batch.item.data.RepositoryItemWriter;
 import org.springframework.batch.item.data.builder.RepositoryItemReaderBuilder;
-import org.springframework.batch.item.database.JdbcPagingItemReader;
-import org.springframework.batch.item.database.JpaPagingItemReader;
-import org.springframework.batch.item.database.PagingQueryProvider;
-import org.springframework.batch.item.database.builder.JdbcPagingItemReaderBuilder;
-import org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.SqlParameterValue;
-import org.springframework.util.MethodInvoker;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @Slf4j
 @AllArgsConstructor
@@ -136,7 +124,7 @@ public class InactiveUserJobConfig {
         return new RepositoryItemReaderBuilder()
             .repository(userRepository)
             .methodName("findByUpdatedDateBeforeAndStatusEquals")
-            .pageSize(CHUNK_SIZE)
+//            .pageSize(CHUNK_SIZE)
             .maxItemCount(CHUNK_SIZE)
             .arguments(Arrays.asList(LocalDateTime.now().minusYears(1), UserStatus.ACTIVE))
             .sorts(Collections.singletonMap("idx", Sort.Direction.ASC))
@@ -148,11 +136,18 @@ public class InactiveUserJobConfig {
         return User::setInactive;
     }
 
-    public ItemWriter<User> itemWriter() {
-        return ((List<? extends User> user) -> {
-            user.forEach(o -> log.info(">>>> user = {}", o));
-            userRepository.saveAll(user);
-        });
+//    public ItemWriter<User> itemWriter() {
+//        return ((List<? extends User> user) -> {
+//            user.forEach(o -> log.info(">>>> user = {}", o));
+//            userRepository.saveAll(user);
+//        });
+//    }
+
+//    JpaItemWriter 작성
+    public JpaItemWriter<User> itemWriter() {
+        JpaItemWriter<User> jpaItemWriter = new JpaItemWriter<>();
+        jpaItemWriter.setEntityManagerFactory(entityManagerFactory);
+        return jpaItemWriter;
     }
 
 }
