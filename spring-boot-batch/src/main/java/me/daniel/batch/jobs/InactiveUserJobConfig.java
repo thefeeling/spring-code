@@ -4,27 +4,32 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.daniel.batch.domain.User;
 import me.daniel.batch.domain.enums.UserStatus;
+import me.daniel.batch.jobs.listener.InactiveJobListener;
+import me.daniel.batch.jobs.listener.InactiveStepListener;
 import me.daniel.batch.repository.UserRepository;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.job.builder.FlowBuilder;
+import org.springframework.batch.core.job.flow.Flow;
+import org.springframework.batch.core.job.flow.FlowExecutionStatus;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.data.RepositoryItemReader;
-import org.springframework.batch.item.data.builder.RepositoryItemReaderBuilder;
+import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.database.JpaItemWriter;
+import org.springframework.batch.item.database.JpaPagingItemReader;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.domain.Sort;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.HashMap;
 
 @Slf4j
 @AllArgsConstructor
@@ -37,25 +42,46 @@ public class InactiveUserJobConfig {
     private final EntityManagerFactory entityManagerFactory;
     private final DataSource dataSource;
 
-    @Bean
+    @Bean(name = "InactiveUserJob")
     public Job InactiveUserJob(
         JobBuilderFactory jobBuilderFactory,
-        Step inactiveJobStep
+        InactiveJobListener inactiveJobListener,
+        Step inactiveJobStep,
+        Flow inactiveJobFlow
     ) {
         return jobBuilderFactory.get("inactiveUserJob")
             .preventRestart()
-            .start(inactiveJobStep)
+            .listener(inactiveJobListener)
+//            .start(inactiveJobFlow) // Flow
+//            .end()
+            .start(inactiveJobStep) // Flow
             .build();
     }
 
     @Bean
-    public Step inactiveJobStep(StepBuilderFactory stepBuilderFactory) {
+    public Step inactiveJobStep(
+        StepBuilderFactory stepBuilderFactory,
+        ItemReader itemReader,
+        InactiveStepListener inactiveStepListener
+    ) {
         return stepBuilderFactory.get("inactiveUserStep")
             .<User, User>chunk(CHUNK_SIZE)
-            .reader(itemReader())
+            .reader(itemReader)
             .processor(itemProcessor())
             .writer(itemWriter())
+            .listener(inactiveStepListener)
             .build();
+    }
+
+
+    @Bean
+    public Flow inactiveJobFlow(Step inactiveJobStep) {
+        FlowBuilder<Flow> flowBuilder = new FlowBuilder<>("inactiveJobFlow");
+        return flowBuilder
+            .start(new InactiveJobExecutionDecider())
+            .on(FlowExecutionStatus.FAILED.getName()).end()
+            .on(FlowExecutionStatus.COMPLETED.getName()).to(inactiveJobStep)
+            .end();
     }
 
 //    @Bean
@@ -67,26 +93,26 @@ public class InactiveUserJobConfig {
 //        return new ListItemReader<>(oldUsers);
 //    }
 
-//    @Bean(destroyMethod = "")
-//    @StepScope
-//    public JpaPagingItemReader<User> itemReader(@Value("#{jobParameters[nowDate]}") Date nowDate) {
-//        JpaPagingItemReader<User> jpaPagingItemReader = new JpaPagingItemReader<User>() {
-//            @Override
-//            public int getPage() {
-//                return 0;
-//            }
-//        };
-//        jpaPagingItemReader.setQueryString(
-//            "select u from User as u where u.updatedDate < :updatedDate and u.status = :status"
-//        );
-//        HashMap<String, Object> map = new HashMap<>();
-//        map.put("updatedDate", (LocalDateTime.ofInstant(nowDate.toInstant(), ZoneId.systemDefault())).minusYears(1));
-//        map.put("status", UserStatus.ACTIVE);
-//        jpaPagingItemReader.setParameterValues(map);
-//        jpaPagingItemReader.setEntityManagerFactory(entityManagerFactory);
-//        jpaPagingItemReader.setPageSize(CHUNK_SIZE);
-//        return jpaPagingItemReader;
-//    }
+    @Bean(destroyMethod = "")
+    @StepScope
+    public JpaPagingItemReader<User> itemReader(@Value("#{jobParameters[nowDate]}") Date nowDate) {
+        JpaPagingItemReader<User> jpaPagingItemReader = new JpaPagingItemReader<User>() {
+            @Override
+            public int getPage() {
+                return 0;
+            }
+        };
+        jpaPagingItemReader.setQueryString(
+            "select u from User as u where u.updatedDate < :updatedDate and u.status = :status"
+        );
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("updatedDate", (LocalDateTime.ofInstant(nowDate.toInstant(), ZoneId.systemDefault())).minusYears(1));
+        map.put("status", UserStatus.ACTIVE);
+        jpaPagingItemReader.setParameterValues(map);
+        jpaPagingItemReader.setEntityManagerFactory(entityManagerFactory);
+        jpaPagingItemReader.setPageSize(CHUNK_SIZE);
+        return jpaPagingItemReader;
+    }
 
 //    @Bean(destroyMethod = "")
 //    @StepScope
@@ -118,19 +144,19 @@ public class InactiveUserJobConfig {
 //    }
 
 
-    @Bean
-    @StepScope
-    public RepositoryItemReader<User> itemReader() {
-        return new RepositoryItemReaderBuilder()
-            .repository(userRepository)
-            .methodName("findByUpdatedDateBeforeAndStatusEquals")
-//            .pageSize(CHUNK_SIZE)
-            .maxItemCount(CHUNK_SIZE)
-            .arguments(Arrays.asList(LocalDateTime.now().minusYears(1), UserStatus.ACTIVE))
-            .sorts(Collections.singletonMap("idx", Sort.Direction.ASC))
-            .name("repositoryItemReader")
-            .build();
-    }
+//    @Bean
+//    @StepScope
+//    public RepositoryItemReader<User> itemReader() {
+//        return new RepositoryItemReaderBuilder()
+//            .repository(userRepository)
+//            .methodName("findByUpdatedDateBeforeAndStatusEquals")
+////            .pageSize(CHUNK_SIZE)
+//            .maxItemCount(CHUNK_SIZE)
+//            .arguments(Arrays.asList(LocalDateTime.now().minusYears(1), UserStatus.ACTIVE))
+//            .sorts(Collections.singletonMap("idx", Sort.Direction.ASC))
+//            .name("repositoryItemReader")
+//            .build();
+//    }
 
     public ItemProcessor<User, User> itemProcessor() {
         return User::setInactive;
@@ -143,7 +169,7 @@ public class InactiveUserJobConfig {
 //        });
 //    }
 
-//    JpaItemWriter 작성
+    //    JpaItemWriter 작성
     public JpaItemWriter<User> itemWriter() {
         JpaItemWriter<User> jpaItemWriter = new JpaItemWriter<>();
         jpaItemWriter.setEntityManagerFactory(entityManagerFactory);
