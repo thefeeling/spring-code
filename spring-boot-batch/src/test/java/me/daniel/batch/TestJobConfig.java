@@ -27,8 +27,8 @@ public class TestJobConfig {
         return new JobLauncherTestUtils() {
             @Override
             @Autowired
-            public void setJob(@Qualifier("commonJob") Job commonJob) {
-                super.setJob(commonJob);
+            public void setJob(@Qualifier("commonJob") Job job) {
+                super.setJob(job);
             }
         };
     }
