@@ -1,7 +1,6 @@
 package me.daniel.kotlinspringbootquerydsl.repository
 
 import com.querydsl.core.types.Predicate
-import com.querydsl.core.types.dsl.StringPath
 import me.daniel.kotlinspringbootquerydsl.domain.Person
 import me.daniel.kotlinspringbootquerydsl.domain.QAddress
 import me.daniel.kotlinspringbootquerydsl.domain.QPerson
@@ -12,7 +11,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer
 import org.springframework.data.querydsl.binding.QuerydslBindings
-import java.util.*
 
 interface PersonRepositoryWrapper<T> {
     fun search(predicate: Predicate, pageable: Pageable) : Page<T>
@@ -31,8 +29,6 @@ class PersonRepositoryImpl: QuerydslRepositorySupport(Person::class.java), Perso
 //        }
         bindings.excluding(root.address)
     }
-
-
 
     override fun search(predicate: Predicate, pageable: Pageable): Page<Person> {
         val query = from(person).where(predicate)
