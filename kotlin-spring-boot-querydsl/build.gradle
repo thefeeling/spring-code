@@ -79,6 +79,7 @@ dependencies {
     implementation("org.mapstruct:mapstruct:${mapstruct}")
     // map-struct Annotation Processor
     kapt("org.mapstruct:mapstruct-processor:${mapstruct}")
+    kaptTest("org.mapstruct:mapstruct-processor:${mapstruct}")
 
     runtimeOnly('com.h2database:h2')
     testImplementation('org.springframework.boot:spring-boot-starter-test')

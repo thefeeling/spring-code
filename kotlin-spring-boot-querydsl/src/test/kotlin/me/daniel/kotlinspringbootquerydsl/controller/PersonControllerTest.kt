@@ -21,7 +21,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
 
 @RunWith(SpringRunner::class)
-//@ContextConfiguration(classes = [KotlinSpringBootQuerydslApplication::class])
 @WebMvcTest(controllers = [PersonController::class])
 class PersonControllerTest {
 
@@ -42,25 +41,46 @@ class PersonControllerTest {
     @Test
     fun `목록을 요청할 수 있어야 한다`() {
         // Given
+        given(service.getCustomDtoPage(
+            pageable = PageRequest.of(0, 10)
+        )).willReturn(PageImpl(listOf()))
+
+        // When
+        val resultActions = this.mockMvc
+            .perform(get("/persons/custom"))
+            .andDo(print())
+        // Then
+        resultActions
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(jsonPath("totalElements").isNumber)
+            .andExpect(jsonPath("totalElements").value(0))
+            .andExpect(jsonPath("content").exists())
+            .andExpect(jsonPath("content").isArray)
+    }
+
+    @Test
+    fun `페이징을 할 수 있어야 한다`() {
+        // Given
         given(
             service.getCustomDtoPage(
-                pageable = PageRequest.of(0, 10)
+                pageable = PageRequest.of(0, 20)
             )
         ).willReturn(PageImpl(listOf(
-                PersonDto.pageDto().apply {
-                    name = "kschoi"
-                    city = "city"
-                    street = "street"
-                    zipCode = "010101"
-                }
+            PersonDto.pageDto().apply {
+                name = "kschoi"
+                city = "city"
+                street = "street"
+                zipCode = "010101"
+            }
         )))
 
         // When
         val resultActions = this.mockMvc
             .perform(
-                    get("/persons/custom")
-                        .param("page", "0")
-                        .param("size", "10")
+                get("/persons/custom")
+                    .param("page", "0")
+                    .param("size", "20")
             )
             .andDo(print())
         // Then
@@ -72,4 +92,5 @@ class PersonControllerTest {
             .andExpect(jsonPath("content").exists())
             .andExpect(jsonPath("content").isArray)
     }
+
 }
