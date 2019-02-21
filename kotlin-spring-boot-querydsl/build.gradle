@@ -1,8 +1,9 @@
 buildscript {
     ext {
-        kotlinVersion = '1.2.71'
-        springBootVersion = '2.0.5.RELEASE'
-        queryDslVersion = '4.1.4'
+        kotlinVersion = '1.3.21'
+        springBootVersion = '2.1.2.RELEASE'
+        queryDslVersion = '4.2.1'
+        mapstruct = '1.3.0.Final'
     }
     repositories {
         mavenCentral()
@@ -69,11 +70,20 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
+    // querydsl
+    implementation("com.querydsl:querydsl-jpa:${queryDslVersion}")
+    // querydsl Annotation Processor
+    kapt("com.querydsl:querydsl-apt:${queryDslVersion}:jpa")
+
+    // map-struct
+    implementation("org.mapstruct:mapstruct:${mapstruct}")
+    // map-struct Annotation Processor
+    kapt("org.mapstruct:mapstruct-processor:${mapstruct}")
+    kaptTest("org.mapstruct:mapstruct-processor:${mapstruct}")
+
     runtimeOnly('com.h2database:h2')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
 
-    // querydsl
-    implementation("com.querydsl:querydsl-jpa:${queryDslVersion}")
-    kapt("com.querydsl:querydsl-apt:${queryDslVersion}:jpa") // querydsl Annotation Processor
+
 
 }
