@@ -2,44 +2,37 @@ package me.daniel.kotlinspringbootquerydsl.controller
 
 import me.daniel.kotlinspringbootquerydsl.dto.PersonDto
 import me.daniel.kotlinspringbootquerydsl.service.PersonService
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.MediaType
-import org.springframework.test.context.junit4.SpringRunner
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
-import org.springframework.web.context.WebApplicationContext
 
-@RunWith(SpringRunner::class)
+@ExtendWith(SpringExtension::class)
 @WebMvcTest(controllers = [PersonController::class])
+@AutoConfigureMockMvc
 class PersonControllerTest {
 
     @Autowired
-    private lateinit var ctx: WebApplicationContext
     private lateinit var mockMvc: MockMvc
 
     @MockBean
     private lateinit var service: PersonService
 
-    @Before
-    fun setUp() {
-        mockMvc = MockMvcBuilders
-                .webAppContextSetup(ctx)
-                .build()
-    }
-
     @Test
-    fun `목록을 요청할 수 있어야 한다`() {
+    @DisplayName("목록을 요청할 수 있어야 한다")
+    fun shouldRequestList() {
         // Given
         given(service.getCustomDtoPage(
             pageable = PageRequest.of(0, 10)
@@ -60,7 +53,8 @@ class PersonControllerTest {
     }
 
     @Test
-    fun `페이징을 할 수 있어야 한다`() {
+    @DisplayName("페이징을 할 수 있어야 한다")
+    fun shouldRequestPage() {
         // Given
         given(
             service.getCustomDtoPage(
