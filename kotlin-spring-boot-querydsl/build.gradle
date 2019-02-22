@@ -109,5 +109,16 @@ dependencies {
 
     // rest-docs
     testCompile('org.springframework.restdocs:spring-restdocs-mockmvc:2.0.3.RELEASE')
+}
 
+//apply from: "./${rootDir}/task.gradle"
+task deployDocs {
+    group 'deploy'
+    doLast {
+        exec { commandLine "./gradlew clean".split(' ') }
+        exec { commandLine "./gradlew asciidoctor".split(' ') }
+        exec { commandLine "aws s3 ls".split(' ') }
+        // aws cloudfront create-invalidation --distribution-id $CDN_DISTRIBUTION_ID --paths "/*"
+        exec { commandLine "aws s3 sync ./build/asciidoc/html5 s3://[BUCKET_NAME]".split(' ') }
+    }
 }
