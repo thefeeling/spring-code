@@ -1,31 +1,90 @@
 package me.daniel.kotlinspringbootquerydsl.controller
 
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
+import org.springframework.restdocs.RestDocumentationContextProvider
+import org.springframework.restdocs.RestDocumentationExtension
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.MockMvcBuilder
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
+import org.springframework.test.web.servlet.setup.MockMvcBuilders
+import org.springframework.web.context.WebApplicationContext
+import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler
+import org.springframework.restdocs.operation.preprocess.Preprocessors
+import org.springframework.restdocs.operation.preprocess.Preprocessors.*
+import org.springframework.restdocs.payload.PayloadDocumentation
+import org.springframework.restdocs.payload.PayloadDocumentation.*
+import org.springframework.restdocs.request.RequestDocumentation
+import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
+import org.springframework.restdocs.request.RequestDocumentation.pathParameters
+import org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse
+import org.springframework.restdocs.operation.preprocess.OperationResponsePreprocessor
+import org.springframework.restdocs.operation.preprocess.Preprocessors.modifyUris
+import org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest
+import org.springframework.restdocs.operation.preprocess.OperationRequestPreprocessor
+import org.springframework.restdocs.payload.JsonFieldType
 
 
-@ExtendWith(SpringExtension::class)
+@ExtendWith(value = [RestDocumentationExtension::class, SpringExtension::class])
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
+@AutoConfigureRestDocs
 class PersonControllerIntegrationTest {
 
     @Autowired
-    private lateinit var mockMvcTest: MockMvc
+    private lateinit var mockMvc: MockMvc
+
+    @Test
+    @DisplayName("단건을 조회할 수 있어야 한다.")
+    fun documentTest() {
+        this.mockMvc.perform(
+            get("/persons/{id}", 1L)
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andDo(print())
+            .andDo(document("person-findOne",
+                preprocessResponse(prettyPrint()),
+                pathParameters(
+                    parameterWithName("id").description("Member's id")
+                ),
+                responseFields(
+                    fieldWithPath("address.city")
+                        .type(JsonFieldType.STRING)
+                        .description("The Member's email address"),
+                    fieldWithPath("address.street")
+                        .type(JsonFieldType.STRING)
+                        .description("The Member's address city"),
+                    fieldWithPath("address.zipCode")
+                        .type(JsonFieldType.STRING)
+                        .description("The Member's address city"),
+                    fieldWithPath("name")
+                        .type(JsonFieldType.STRING)
+                        .description("The Member's address street")
+                )
+            ))
+    }
+
 
     @Test
     @DisplayName("목록을_요청할_수_있어야 한다")
     fun shouldRequestPage() {
-        this.mockMvcTest.perform(
+        this.mockMvc.perform(
             get("/persons")
         )
             .andDo(print())

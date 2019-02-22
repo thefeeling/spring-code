@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import java.lang.RuntimeException
+import java.util.*
 
 @Service
 class PersonService(
@@ -31,4 +33,15 @@ class PersonService(
         return personRepository.findAll(pageable)
             .map(personConverter::toPage)
     }
+
+    fun get(id: Long): PersonDto.domainDto? {
+        return personRepository.findById(id)
+            .map(personConverter::fromPerson)
+            .orElseThrow {
+                throw RuntimeException("NotFoundResource")
+            }
+
+    }
+
+
 }
