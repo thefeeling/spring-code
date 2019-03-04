@@ -6,15 +6,14 @@ import org.mapstruct.Mapper
 import org.mapstruct.Mapping
 import org.mapstruct.Mappings
 
-
-@Mapper(uses = [AddressConverter::class])
+@Mapper(componentModel = "spring", uses = [AddressConverter::class])
 interface PersonConverter {
-    @Mappings(
-        value = [
-            Mapping(source = "person.name", target = "name"),
-            Mapping(source = "person.address", target = "person.address")
-        ]
-    )
+//    @Mappings(
+//        value = [
+//            Mapping(source = "person.name", target = "name"),
+//            Mapping(source = "person.address", target = "person.address")
+//        ]
+//    )
     fun fromPerson(person: Person): PersonDto.domainDto
 
     @Mappings(

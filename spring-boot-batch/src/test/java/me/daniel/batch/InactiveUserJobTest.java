@@ -52,9 +52,7 @@ public class InactiveUserJobTest {
 
     @Test
     public void FLOW_전환_테스트() throws Exception {
-        JobExecution jobExecution = commonJobJobLauncher.launchJob(
-//            new JobParametersBuilder().addDate("nowDate", new Date()).toJobParameters()
-        );
+        JobExecution jobExecution = commonJobJobLauncher.launchJob();
         System.out.println(jobExecution);
         assertEquals(0, 0);
     }
