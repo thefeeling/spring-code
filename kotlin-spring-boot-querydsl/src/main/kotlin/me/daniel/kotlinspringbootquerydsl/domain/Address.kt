@@ -1,5 +1,6 @@
 package me.daniel.kotlinspringbootquerydsl.domain
 
+import javax.persistence.Column
 import javax.persistence.Entity
 
 @Entity

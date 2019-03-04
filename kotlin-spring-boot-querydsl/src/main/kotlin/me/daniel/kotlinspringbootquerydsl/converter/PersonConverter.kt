@@ -9,12 +9,12 @@ import org.mapstruct.Mappings
 
 @Mapper(uses = [AddressConverter::class])
 interface PersonConverter {
-//    @Mappings(
-//        value = [
-//            Mapping(source = "person.name", target = "name"),
-//            Mapping(source = "person.address", target = "person.address")
-//        ]
-//    )
+    @Mappings(
+        value = [
+            Mapping(source = "person.name", target = "name"),
+            Mapping(source = "person.address", target = "person.address")
+        ]
+    )
     fun fromPerson(person: Person): PersonDto.domainDto
 
     @Mappings(

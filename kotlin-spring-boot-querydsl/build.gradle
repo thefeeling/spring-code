@@ -16,6 +16,7 @@ buildscript {
     }
 }
 
+apply plugin: 'java'
 apply plugin: 'kotlin'
 apply plugin: 'kotlin-spring'
 apply plugin: 'kotlin-jpa'
@@ -71,18 +72,15 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
     // querydsl
-    implementation("com.querydsl:querydsl-jpa:${queryDslVersion}")
     // querydsl Annotation Processor
+    implementation("com.querydsl:querydsl-jpa:${queryDslVersion}")
     kapt("com.querydsl:querydsl-apt:${queryDslVersion}:jpa")
 
     // map-struct
-    implementation("org.mapstruct:mapstruct:${mapstruct}")
     // map-struct Annotation Processor
+    implementation("org.mapstruct:mapstruct:${mapstruct}")
     kapt("org.mapstruct:mapstruct-processor:${mapstruct}")
 
     runtimeOnly('com.h2database:h2')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
-
-
-
 }
