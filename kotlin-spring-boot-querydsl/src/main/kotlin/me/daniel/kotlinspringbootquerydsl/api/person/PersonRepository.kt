@@ -1,9 +1,9 @@
-package me.daniel.kotlinspringbootquerydsl.repository
+package me.daniel.kotlinspringbootquerydsl.api.person
 
 import com.querydsl.core.types.Predicate
-import me.daniel.kotlinspringbootquerydsl.domain.Person
-import me.daniel.kotlinspringbootquerydsl.domain.QAddress
-import me.daniel.kotlinspringbootquerydsl.domain.QPerson
+import me.daniel.kotlinspringbootquerydsl.api.person.entity.Person
+import me.daniel.kotlinspringbootquerydsl.api.person.entity.QAddress
+import me.daniel.kotlinspringbootquerydsl.api.person.entity.QPerson
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
@@ -23,10 +23,6 @@ class PersonRepositoryImpl: QuerydslRepositorySupport(Person::class.java), Perso
     }
 
     override fun customize(bindings: QuerydslBindings, root: QPerson) {
-//        bindings.including(root.id, root.name)
-//        bindings.bind(String::class.java).first { path: StringPath, value: String ->
-//            path.contains(value)
-//        }
         bindings.excluding(root.address)
     }
 

@@ -1,9 +1,8 @@
 package me.daniel.kotlinspringbootquerydsl
 
-import me.daniel.kotlinspringbootquerydsl.domain.Address
-import me.daniel.kotlinspringbootquerydsl.domain.Person
-import me.daniel.kotlinspringbootquerydsl.repository.AddressRepository
-import me.daniel.kotlinspringbootquerydsl.repository.PersonRepository
+import me.daniel.kotlinspringbootquerydsl.api.person.entity.Address
+import me.daniel.kotlinspringbootquerydsl.api.person.entity.Person
+import me.daniel.kotlinspringbootquerydsl.api.person.PersonRepository
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -21,12 +20,12 @@ class KotlinSpringBootQuerydslApplication (
         for (i in 1..100) {
             val name = UUID.randomUUID().toString() + i
             personRepository.save(Person(
-                    name = name,
-                    address = Address(
-                            city = "Seoul$i",
-                            street = "Insa$i",
-                            zipCode = "1111$i"
-                    )
+                name = name,
+                address = Address(
+                    city = "Seoul$i",
+                    street = "Insa$i",
+                    zipCode = "1111$i"
+                )
             ))
         }
     }

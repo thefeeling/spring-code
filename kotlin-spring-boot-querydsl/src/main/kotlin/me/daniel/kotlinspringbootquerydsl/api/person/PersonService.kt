@@ -1,15 +1,10 @@
-package me.daniel.kotlinspringbootquerydsl.service
+package me.daniel.kotlinspringbootquerydsl.api.person
 
 import com.querydsl.core.types.Predicate
-import me.daniel.kotlinspringbootquerydsl.converter.PersonConverter
-import me.daniel.kotlinspringbootquerydsl.dto.PersonDto
-import me.daniel.kotlinspringbootquerydsl.repository.PersonRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
-import java.lang.RuntimeException
-import java.util.*
 
 @Service
 class PersonService(

@@ -1,10 +1,7 @@
-package me.daniel.kotlinspringbootquerydsl.controller
+package me.daniel.kotlinspringbootquerydsl.api.person
 
 import com.querydsl.core.types.Predicate
-import me.daniel.kotlinspringbootquerydsl.domain.Person
-import me.daniel.kotlinspringbootquerydsl.dto.PersonDto
-import me.daniel.kotlinspringbootquerydsl.service.PersonService
-import org.springframework.beans.factory.annotation.Autowired
+import me.daniel.kotlinspringbootquerydsl.api.person.entity.Person
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.querydsl.binding.QuerydslPredicate

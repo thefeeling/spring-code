@@ -1,4 +1,4 @@
-package me.daniel.kotlinspringbootquerydsl.dto
+package me.daniel.kotlinspringbootquerydsl.api.person
 
 data class AddressDto(var street: String?, var zipCode: String?, var city: String?) {
     // Necessary for MapStruct
