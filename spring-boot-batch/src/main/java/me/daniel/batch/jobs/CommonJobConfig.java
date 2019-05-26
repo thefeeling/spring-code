@@ -46,11 +46,13 @@ public class CommonJobConfig {
             PlatformTransactionManager transactionManager
     ) {
         TaskletStep startStep = new StepBuilder("commonStep1")
-                .repository(jobRepository)
-                .transactionManager(transactionManager)
+//                .repository(jobRepository)
+//                .transactionManager(transactionManager)
                 .tasklet((contribution, chunkContext) -> {
+                    int value = new Random().nextInt();
                     log.info("CommonJobTasklet1.execute");
-                    if (new Random().nextInt() < 0) {
+                    log.info("Random Value : {}", value);
+                    if (value < 0) {
                         contribution.setExitStatus(ExitStatus.FAILED);
                     }
                     return RepeatStatus.FINISHED;
@@ -58,23 +60,33 @@ public class CommonJobConfig {
                 .build();
 
         TaskletStep completeStep = new StepBuilder("commonStep2")
-                .repository(jobRepository)
-                .transactionManager(transactionManager)
+//                .repository(jobRepository)
+//                .transactionManager(transactionManager)
                 .tasklet((contribution, chunkContext) -> {
                     log.info("CommonJobTasklet2.execute");
                     return RepeatStatus.FINISHED;
                 })
                 .build();
 
+        TaskletStep failureStep = new StepBuilder("failureStep")
+//            .repository(jobRepository)
+//            .transactionManager(transactionManager)
+            .tasklet((contribution, chunkContext) -> {
+                log.info("failureStep.execute");
+                return RepeatStatus.FINISHED;
+            })
+            .build();
+
         return jobBuilderFactory
                 .get("commonJob")
                 .start(startStep)
+                // on이 Catch하는 상태 값은 ExitStatus.FAILED
                 .on("COMPLETED").to(completeStep)
+                .from(startStep).on("FAILED").to(failureStep)
                 .on("*").fail()
                 .end()
                 .build();
     }
-
 
 //    @Bean
 //    public Step commonStep1(StepBuilderFactory stepBuilderFactory) {
