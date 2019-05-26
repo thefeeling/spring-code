@@ -1,4 +1,4 @@
-package me.daniel.kotlinspringbootquerydsl.domain
+package me.daniel.kotlinspringbootquerydsl.config
 
 import org.springframework.data.util.ProxyUtils
 import javax.persistence.*

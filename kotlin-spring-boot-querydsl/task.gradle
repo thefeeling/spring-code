@@ -1,0 +1,15 @@
+
+//task deployDocs(type: Exec) {
+task deployDocs() {
+    group 'deploy'
+    exec { commandLine "aws s3 ls" }
+//    dependsOn asciidoctor
+//    doLast {
+//
+//        exec { commandLine "docker rm ${containerName}".split(' ') }
+//        exec { commandLine "docker run -d -p 80:8080 --name my-demo ${imageName}".split(' ') }
+//        println file("${asciidoctor.outputDir}/html5").listFiles()
+//    }
+}
+
+

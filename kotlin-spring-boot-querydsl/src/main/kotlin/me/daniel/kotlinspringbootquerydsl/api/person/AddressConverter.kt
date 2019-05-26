@@ -1,7 +1,6 @@
-package me.daniel.kotlinspringbootquerydsl.converter
+package me.daniel.kotlinspringbootquerydsl.api.person
 
-import me.daniel.kotlinspringbootquerydsl.domain.Address
-import me.daniel.kotlinspringbootquerydsl.dto.AddressDto
+import me.daniel.kotlinspringbootquerydsl.api.person.entity.Address
 import org.mapstruct.Mapper
 
 

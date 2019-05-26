@@ -1,4 +1,4 @@
-package me.daniel.kotlinspringbootquerydsl.dto
+package me.daniel.kotlinspringbootquerydsl.api.person
 
 class PersonDto {
     data class domainDto(var name: String?, var address: AddressDto?) {

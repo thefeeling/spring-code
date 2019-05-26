@@ -1,9 +1,6 @@
-package me.daniel.kotlinspringbootquerydsl.service
+package me.daniel.kotlinspringbootquerydsl.api.person
 
 import com.querydsl.core.types.Predicate
-import me.daniel.kotlinspringbootquerydsl.converter.PersonConverter
-import me.daniel.kotlinspringbootquerydsl.dto.PersonDto
-import me.daniel.kotlinspringbootquerydsl.repository.PersonRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -31,4 +28,15 @@ class PersonService(
         return personRepository.findAll(pageable)
             .map(personConverter::toPage)
     }
+
+    fun get(id: Long): PersonDto.domainDto? {
+        return personRepository.findById(id)
+            .map(personConverter::fromPerson)
+            .orElseThrow {
+                throw RuntimeException("NotFoundResource")
+            }
+
+    }
+
+
 }

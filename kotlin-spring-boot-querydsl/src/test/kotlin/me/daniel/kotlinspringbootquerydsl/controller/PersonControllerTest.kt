@@ -1,7 +1,9 @@
 package me.daniel.kotlinspringbootquerydsl.controller
 
-import me.daniel.kotlinspringbootquerydsl.dto.PersonDto
-import me.daniel.kotlinspringbootquerydsl.service.PersonService
+import me.daniel.kotlinspringbootquerydsl.api.person.PersonController
+import me.daniel.kotlinspringbootquerydsl.api.person.PersonDto
+import me.daniel.kotlinspringbootquerydsl.api.person.PersonRepository
+import me.daniel.kotlinspringbootquerydsl.api.person.PersonService
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -29,6 +31,9 @@ class PersonControllerTest {
 
     @MockBean
     private lateinit var service: PersonService
+
+    @MockBean
+    private lateinit var repository: PersonRepository
 
     @Test
     @DisplayName("목록을 요청할 수 있어야 한다")
