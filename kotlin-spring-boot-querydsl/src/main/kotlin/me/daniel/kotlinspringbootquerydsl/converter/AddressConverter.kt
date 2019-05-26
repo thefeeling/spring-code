@@ -8,4 +8,5 @@ import org.mapstruct.Mapper
 @Mapper(componentModel = "spring")
 interface AddressConverter {
     fun fromAddress(address: Address): AddressDto
+    fun fromAddressDto(dto: AddressDto): Address
 }
