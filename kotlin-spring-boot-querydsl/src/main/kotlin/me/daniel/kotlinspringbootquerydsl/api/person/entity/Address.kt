@@ -1,6 +1,6 @@
-package me.daniel.kotlinspringbootquerydsl.api.person
+package me.daniel.kotlinspringbootquerydsl.api.person.entity
 
-import me.daniel.kotlinspringbootquerydsl.domain.AbstractJpaPersistable
+import me.daniel.kotlinspringbootquerydsl.config.AbstractJpaPersistable
 import javax.persistence.Entity
 
 @Entity
