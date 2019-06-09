@@ -1,5 +1,5 @@
-package me.daniel.kotlinspringbootquerydsl.api.person
-import me.daniel.kotlinspringbootquerydsl.domain.AbstractJpaPersistable
+package me.daniel.kotlinspringbootquerydsl.api.person.entity
+import me.daniel.kotlinspringbootquerydsl.config.AbstractJpaPersistable
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType

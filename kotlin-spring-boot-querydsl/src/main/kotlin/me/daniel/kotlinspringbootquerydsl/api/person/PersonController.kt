@@ -19,8 +19,8 @@ class PersonController(
 
     @GetMapping
     fun dtoPage(
-        @QuerydslPredicate(root = Person::class) predicate: Predicate,
-        pageable: Pageable
+            @QuerydslPredicate(root = Person::class) predicate: Predicate,
+            pageable: Pageable
     ) = personService.getList(predicate, pageable)
 
     @GetMapping("/custom")
