@@ -24,7 +24,6 @@ class DddWithJpaApplication: CommandLineRunner {
 //                contentType = "MOVIE"
 //        ))
 //        val res = repository.save(entity)
-
     }
 
 }

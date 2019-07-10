@@ -38,5 +38,13 @@ class Order protected constructor() {
     @OrderBy(value = "line_idx")
     var orderLines: MutableList<OrderLine> = mutableListOf()
         protected set
+
+    private fun calculateTotalAmounts() {
+        this.totalAmount = Money(
+            totalAmount = this.orderLines
+                .map { it.price.totalAmount * it.quantity }
+                .sum()
+        )
+    }
 }
 
