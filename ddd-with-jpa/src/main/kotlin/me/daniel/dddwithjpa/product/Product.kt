@@ -11,7 +11,8 @@ class Product protected constructor() {
 
 	@ElementCollection
 	@CollectionTable(
-		name = "product_category", joinColumns = [JoinColumn(name = "product_id")]
+		name = "product_category",
+		joinColumns = [JoinColumn(name = "product_id")]
 	)
 	lateinit var categoryIds: MutableSet<CategoryId>
 		protected set
