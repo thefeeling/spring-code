@@ -8,7 +8,7 @@ import javax.persistence.*
     name = "article_content",
     pkJoinColumns = [PrimaryKeyJoinColumn(name = "id")]
 )
-class Article private constructor() {
+class Article protected constructor() {
     companion object {
         fun create(
             title: String = "",
