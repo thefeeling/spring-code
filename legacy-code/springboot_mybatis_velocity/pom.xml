@@ -28,7 +28,7 @@
 		<!-- spring-boot-starter -->
 		<spring.boot.starter>1.3.3.RELEASE</spring.boot.starter>
 		<!-- mysql-connector -->
-		<mysql.connector>5.1.38</mysql.connector>
+		<mysql.connector>8.0.16</mysql.connector>
 	</properties>
 
 	<dependencies>
