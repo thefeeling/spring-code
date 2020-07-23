@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/persons")
 class PersonController(
-    private val personService: PersonService
+    private val personService: PersonService,
+    private val testRepository: TestRepository
 ) {
 
     @GetMapping
@@ -35,5 +36,9 @@ class PersonController(
         @PathVariable id: Long
     ) = personService.get(id)
 
+    @GetMapping("/test")
+    fun list(): MutableList<Person>? {
+        return testRepository.findAllBy()
+    }
 
 }
